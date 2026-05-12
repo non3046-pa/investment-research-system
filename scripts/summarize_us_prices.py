@@ -44,7 +44,9 @@ def load_price_csv(file_path: Path) -> pd.DataFrame:
         raise ValueError(f"ไฟล์ {file_path} ไม่มีคอลัมน์ Date/Close ครบถ้วน")
 
     # แปลงชนิดข้อมูลให้พร้อมคำนวณ
-    df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+    # ใช้ utc=True เพื่อลด FutureWarning กรณีข้อมูลวันที่มี timezone ปะปนกัน
+    # จากนั้นแปลงเป็น naive datetime (UTC) เพื่อให้คำนวณช่วงเวลาได้สม่ำเสมอทั้งระบบ
+    df["Date"] = pd.to_datetime(df["Date"], errors="coerce", utc=True).dt.tz_convert(None)
     df["Close"] = pd.to_numeric(df["Close"], errors="coerce")
 
     # ตัดแถวที่ข้อมูลหลักหาย
@@ -106,7 +108,26 @@ def pct_text(value: Optional[float]) -> str:
 
 def build_markdown_report(summaries: List[TickerSummary]) -> str:
     """สร้างข้อความรายงาน Markdown ภาษาไทย"""
-    today_str = pd.Timestamp.utcnow().strftime("%Y-%m-%d")
+    now_bangkok = pd.Timestamp.now(tz="Asia/Bangkok")
+    thai_months = [
+        "มกราคม",
+        "กุมภาพันธ์",
+        "มีนาคม",
+        "เมษายน",
+        "พฤษภาคม",
+        "มิถุนายน",
+        "กรกฎาคม",
+        "สิงหาคม",
+        "กันยายน",
+        "ตุลาคม",
+        "พฤศจิกายน",
+        "ธันวาคม",
+    ]
+    # แสดงวันที่รายงานเป็นภาษาไทยและปี พ.ศ. เพื่อให้อ่านง่ายสำหรับผู้ใช้ไทย
+    thai_date_str = (
+        f"{now_bangkok.day} {thai_months[now_bangkok.month - 1]} {now_bangkok.year + 543} "
+        f"เวลา {now_bangkok.strftime('%H:%M')} น."
+    )
 
     ranked = [s for s in summaries if s.strength_score is not None]
     ranked.sort(key=lambda x: x.strength_score, reverse=True)
@@ -117,7 +138,7 @@ def build_markdown_report(summaries: List[TickerSummary]) -> str:
     lines: List[str] = []
     lines.append("# สรุปราคาหุ้น/ETF สหรัฐ (จากไฟล์ CSV)")
     lines.append("")
-    lines.append(f"อัปเดตรายงาน: {today_str}")
+    lines.append(f"อัปเดตรายงาน: {thai_date_str}")
     lines.append("")
 
     lines.append("## TL;DR")
@@ -131,7 +152,9 @@ def build_markdown_report(summaries: List[TickerSummary]) -> str:
     lines.append("- ผลลัพธ์นี้อิงข้อมูลในโฟลเดอร์ `data/prices/us/` เท่านั้น")
     lines.append("")
 
-    lines.append("## ตารางสรุปแต่ละ ticker")
+    lines.append("## ตารางสรุปแต่ละ Ticker")
+    lines.append("- คอลัมน์ 1M/3M/6M/1Y คือผลตอบแทนย้อนหลังจากข้อมูลราคาปิดในไฟล์ CSV")
+    lines.append("- ค่า `N/A` หมายถึงข้อมูลย้อนหลังไม่เพียงพอสำหรับช่วงเวลานั้น")
     lines.append("")
     lines.append("| Ticker | วันที่ล่าสุด | ราคาปิดล่าสุด | 1M | 3M | 6M | 1Y | คะแนนความแข็งแรง (เฉลี่ย) |")
     lines.append("|---|---:|---:|---:|---:|---:|---:|---:|")
@@ -166,16 +189,17 @@ def build_markdown_report(summaries: List[TickerSummary]) -> str:
         lines.append("- ไม่สามารถสรุปได้จากข้อมูลที่มี")
     lines.append("")
 
-    lines.append("## ข้อควรระวัง")
-    lines.append("- ผลตอบแทนเป็นการคำนวณแบบประมาณจากราคาปิดล่าสุดเทียบกับราคาก่อนหน้าในอดีต")
+    lines.append("## วิธีคำนวณและข้อควรระวัง")
+    lines.append("- ผลตอบแทนทั้งหมดคำนวณจากข้อมูลย้อนหลังในไฟล์ CSV ภายใต้โฟลเดอร์ `data/prices/us/`")
+    lines.append("- วิธีคำนวณ: (ราคาปิดล่าสุด / ราคาปิดย้อนหลังตามช่วงเวลา) - 1")
     lines.append("- หากวันเป้าหมายตรงวันหยุด/ไม่มีข้อมูล ระบบจะใช้ข้อมูลวันก่อนหน้าที่ใกล้ที่สุด")
     lines.append("- บาง ticker อาจมีข้อมูลไม่ครบทุกช่วงเวลา ทำให้ค่า 1M/3M/6M/1Y เป็น N/A")
     lines.append("- การจัดอันดับความแข็งแรงใช้ค่าเฉลี่ยผลตอบแทนย้อนหลังที่มีอยู่ ไม่ได้สะท้อนความเสี่ยงทั้งหมด")
     lines.append("")
 
     lines.append("## Disclaimer")
-    lines.append("รายงานนี้จัดทำเพื่อการวิเคราะห์ข้อมูลย้อนหลังเท่านั้น **ไม่ใช่คำแนะนำในการซื้อขายหลักทรัพย์**")
-    lines.append("ผู้ใช้งานควรศึกษาข้อมูลเพิ่มเติมและพิจารณาความเสี่ยงก่อนตัดสินใจลงทุน")
+    lines.append("รายงานนี้จัดทำเพื่อการวิเคราะห์ข้อมูลย้อนหลังเท่านั้น **ไม่ใช่คำแนะนำซื้อขายหลักทรัพย์**")
+    lines.append("ผู้ใช้งานควรศึกษาข้อมูลเพิ่มเติมและพิจารณาความเสี่ยงก่อนตัดสินใจลงทุนทุกครั้ง")
 
     return "\n".join(lines)
 
