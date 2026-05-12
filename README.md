@@ -1,2 +1,42 @@
-# investment-research-system
-Personal investment research system for stock watchlist, market data, and daily reports
+# Investment Research System
+
+ระบบนี้จัดทำขึ้นเพื่อใช้เก็บข้อมูลหุ้น/ETF ที่สนใจ ติดตามข้อมูลตลาด และจัดทำรายงานวิเคราะห์การลงทุนสำหรับพอร์ตแบบ Conservative-Moderate
+
+## วัตถุประสงค์
+
+1. เก็บรายชื่อหุ้นและ ETF ที่ต้องการติดตามในไฟล์ watchlist.csv
+2. ใช้เป็นฐานข้อมูลสำหรับวิเคราะห์หุ้นรายตัว
+3. ใช้ประกอบการจัดทำรายงานภาพรวมตลาดรายวัน/รายสัปดาห์
+4. ใช้ร่วมกับ ChatGPT/Codex เพื่อช่วยสรุปข้อมูลและจัดทำรายงาน
+
+## ไฟล์สำคัญ
+
+- watchlist.csv: รายชื่อหุ้น/ETF ที่ต้องการติดตาม
+- data/: โฟลเดอร์สำหรับเก็บข้อมูลราคา งบการเงิน และข่าว
+- reports/: โฟลเดอร์สำหรับเก็บรายงานวิเคราะห์
+- scripts/: โฟลเดอร์สำหรับเก็บโค้ด Python ในอนาคต
+- prompts/: โฟลเดอร์สำหรับเก็บคำสั่ง Prompt ที่ใช้ซ้ำ
+
+## หลักการใช้งาน
+
+ระบบนี้ใช้เพื่อการศึกษาและประกอบการตัดสินใจเท่านั้น ไม่ใช่ระบบซื้อขายอัตโนมัติ และไม่ใช่คำแนะนำการลงทุนโดยตรง
+
+## ข้อควรระวัง
+
+1. ห้ามใส่รหัสผ่าน API Key หรือข้อมูลบัญชีหลักทรัพย์
+2. ห้ามใส่ข้อมูลราชการหรือข้อมูลอ่อนไหว
+3. ต้องตรวจสอบข้อมูลราคาหุ้นจากแหล่งทางการก่อนตัดสินใจ
+4. ห้ามใช้ระบบนี้สั่งซื้อขายหุ้นโดยอัตโนมัติ
+
+## แหล่งข้อมูลที่ควรใช้ตรวจสอบ
+
+- หุ้นไทย: SET.or.th, SETSMART, SEC.or.th
+- หุ้นสหรัฐฯ: Yahoo Finance, SEC EDGAR, เว็บไซต์บริษัท
+- ข่าว: Reuters, CNBC, AP, Bloomberg, SET News
+
+## Investor Profile
+
+- Risk Profile: Conservative-Moderate
+- Investment Horizon: Medium to Long Term
+- Focus: Capital preservation, quality stocks, ETFs, dividend income
+- Avoid: Leverage, penny stocks, speculative short-term trading
