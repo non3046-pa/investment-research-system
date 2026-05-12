@@ -13,11 +13,18 @@ import yfinance as yf
 
 WATCHLIST_PATH = Path("watchlist.csv")
 OUTPUT_DIR = Path("data/prices/us")
+REQUIRED_COLUMNS = {"ticker", "market"}
 
 
 def load_us_tickers(watchlist_path: Path) -> list[str]:
     """อ่าน watchlist.csv และคืนรายชื่อ ticker ที่อยู่ในตลาด US เท่านั้น"""
     df = pd.read_csv(watchlist_path)
+
+    # ตรวจสอบว่ามีคอลัมน์ขั้นต่ำที่ต้องใช้
+    missing = REQUIRED_COLUMNS - set(df.columns)
+    if missing:
+        missing_cols = ", ".join(sorted(missing))
+        raise ValueError(f"watchlist.csv ไม่มีคอลัมน์ที่จำเป็น: {missing_cols}")
 
     # กรองเฉพาะตลาด US และตัดค่า ticker ที่ว่าง/ซ้ำ
     us_df = df[df["market"].astype(str).str.upper() == "US"]
@@ -26,6 +33,7 @@ def load_us_tickers(watchlist_path: Path) -> list[str]:
         .dropna()
         .astype(str)
         .str.strip()
+        .str.upper()
         .replace("", pd.NA)
         .dropna()
         .unique()
@@ -61,7 +69,12 @@ def main() -> None:
     # สร้างโฟลเดอร์ปลายทางอัตโนมัติหากยังไม่มี
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    tickers = load_us_tickers(WATCHLIST_PATH)
+    try:
+        tickers = load_us_tickers(WATCHLIST_PATH)
+    except Exception as exc:
+        print(f"[คำเตือน] อ่าน watchlist.csv ไม่สำเร็จ: {exc}")
+        return
+
     if not tickers:
         print("[คำเตือน] ไม่พบ ticker ตลาด US ใน watchlist.csv")
         return
