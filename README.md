@@ -40,3 +40,21 @@
 - Investment Horizon: Medium to Long Term
 - Focus: Capital preservation, quality stocks, ETFs, dividend income
 - Avoid: Leverage, penny stocks, speculative short-term trading
+
+
+## วิธีตรวจสอบ watchlist.csv
+
+สำหรับผู้เริ่มต้น แนะนำให้รันสคริปต์ `scripts/check_watchlist.py` เพื่อช่วยตรวจสอบความถูกต้องของไฟล์ `watchlist.csv` ก่อนนำข้อมูลไปใช้งานต่อ
+
+สคริปต์นี้จะตรวจสอบว่าไฟล์มีคอลัมน์ที่จำเป็นครบถ้วนหรือไม่ ได้แก่
+`ticker`, `market`, `name`, `asset_type`, `category`, `risk_level`, `priority`, `reason_to_watch`, `source_to_check`, `note`
+
+นอกจากนี้ สคริปต์จะตรวจสอบข้อมูลทีละแถวว่าแต่ละรายการมีค่า `ticker` และ `market` หรือไม่ เพื่อป้องกันข้อมูลตกหล่นที่อาจทำให้การวิเคราะห์ผิดพลาด
+
+เมื่อการตรวจสอบเสร็จ สคริปต์จะแสดงจำนวนหุ้น/ETF ทั้งหมด และสรุปจำนวนแยกตาม `market` กับ `asset_type` เพื่อให้เห็นภาพรวมของรายการที่กำลังติดตามได้ง่ายขึ้น
+
+ตัวอย่างคำสั่งสำหรับรันในเครื่อง:
+
+```bash
+python3 scripts/check_watchlist.py
+```
