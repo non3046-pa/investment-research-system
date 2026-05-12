@@ -1,0 +1,4 @@
+# requirements.txt
+# External dependencies for this project
+pandas
+yfinance
