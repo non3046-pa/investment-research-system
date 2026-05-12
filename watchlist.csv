@@ -8,3 +8,4 @@ ADVANC,SET,Advanced Info Service PCL,Stock,Telecom/Dividend,Low-Medium,High,ห�
 BBL,SET,Bangkok Bank PCL,Stock,Banking,Medium,Medium,ธนาคารขนาดใหญ่ ฐานะการเงินแข็งแรง แต่ขึ้นกับเศรษฐกิจและดอกเบี้ย,SET.or.th/SETSMART,ติดตาม NPL และกำไรสุทธิ
 TISCO,SET,TISCO Financial Group PCL,Stock,Banking/Dividend,Medium,Medium,เด่นด้านปันผล แต่ต้องระวังวัฏจักรสินเชื่อ,SET.or.th/SETSMART,ตรวจสอบ Dividend Yield และคุณภาพสินเชื่อ
 CPALL,SET,CP All PCL,Stock,Consumer/Retail,Medium,Medium,ธุรกิจค้าปลีกขนาดใหญ่ มีฐานลูกค้ากว้าง แต่หนี้และ valuation ต้องติดตาม,SET.or.th/SETSMART,ติดตามยอดขายสาขาเดิมและหนี้สิน
+GOOGL,US,Alphabet Inc.,Stock,Technology/Advertising/AI,Medium,Medium,ธุรกิจโฆษณาและ AI ขนาดใหญ่ แต่รายได้ขึ้นกับโฆษณา,Yahoo Finance/SEC filings,ติดตามการแข่งขัน AI
