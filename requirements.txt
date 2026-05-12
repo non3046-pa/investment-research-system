@@ -1,0 +1,7 @@
+# requirements.txt
+# This project currently uses only Python's standard library.
+# currently no external packages are required
+#
+# For beginners:
+# - You can run scripts/check_watchlist.py with Python directly.
+# - No pip install step is needed at this stage.
