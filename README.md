@@ -69,6 +69,7 @@ python3 scripts/check_watchlist.py
 ตัวอย่างคำสั่งรัน:
 
 ```bash
+pip install -r requirements.txt
 python3 scripts/fetch_us_prices.py
 ```
 
