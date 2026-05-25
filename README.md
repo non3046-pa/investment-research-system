@@ -1,76 +1,39 @@
-# Investment Research System
+# ประชุมสุข (PrachumSuk) Landing Page
 
-ระบบนี้จัดทำขึ้นเพื่อใช้เก็บข้อมูลหุ้น/ETF ที่สนใจ ติดตามข้อมูลตลาด และจัดทำรายงานวิเคราะห์การลงทุนสำหรับพอร์ตแบบ Conservative-Moderate
+เว็บไซต์ One Page สำหรับแบรนด์ “ประชุมสุข” พัฒนาด้วย **Next.js + React + Tailwind CSS**
 
-## วัตถุประสงค์
+## วิธีติดตั้งแบบง่ายมาก
 
-1. เก็บรายชื่อหุ้นและ ETF ที่ต้องการติดตามในไฟล์ watchlist.csv
-2. ใช้เป็นฐานข้อมูลสำหรับวิเคราะห์หุ้นรายตัว
-3. ใช้ประกอบการจัดทำรายงานภาพรวมตลาดรายวัน/รายสัปดาห์
-4. ใช้ร่วมกับ ChatGPT/Codex เพื่อช่วยสรุปข้อมูลและจัดทำรายงาน
-
-## ไฟล์สำคัญ
-
-- watchlist.csv: รายชื่อหุ้น/ETF ที่ต้องการติดตาม
-- data/: โฟลเดอร์สำหรับเก็บข้อมูลราคา งบการเงิน และข่าว
-- reports/: โฟลเดอร์สำหรับเก็บรายงานวิเคราะห์
-- scripts/: โฟลเดอร์สำหรับเก็บโค้ด Python ในอนาคต
-- prompts/: โฟลเดอร์สำหรับเก็บคำสั่ง Prompt ที่ใช้ซ้ำ
-
-## หลักการใช้งาน
-
-ระบบนี้ใช้เพื่อการศึกษาและประกอบการตัดสินใจเท่านั้น ไม่ใช่ระบบซื้อขายอัตโนมัติ และไม่ใช่คำแนะนำการลงทุนโดยตรง
-
-## ข้อควรระวัง
-
-1. ห้ามใส่รหัสผ่าน API Key หรือข้อมูลบัญชีหลักทรัพย์
-2. ห้ามใส่ข้อมูลราชการหรือข้อมูลอ่อนไหว
-3. ต้องตรวจสอบข้อมูลราคาหุ้นจากแหล่งทางการก่อนตัดสินใจ
-4. ห้ามใช้ระบบนี้สั่งซื้อขายหุ้นโดยอัตโนมัติ
-
-## แหล่งข้อมูลที่ควรใช้ตรวจสอบ
-
-- หุ้นไทย: SET.or.th, SETSMART, SEC.or.th
-- หุ้นสหรัฐฯ: Yahoo Finance, SEC EDGAR, เว็บไซต์บริษัท
-- ข่าว: Reuters, CNBC, AP, Bloomberg, SET News
-
-## Investor Profile
-
-- Risk Profile: Conservative-Moderate
-- Investment Horizon: Medium to Long Term
-- Focus: Capital preservation, quality stocks, ETFs, dividend income
-- Avoid: Leverage, penny stocks, speculative short-term trading
-
-
-## วิธีตรวจสอบ watchlist.csv
-
-สำหรับผู้เริ่มต้น แนะนำให้รันสคริปต์ `scripts/check_watchlist.py` เพื่อช่วยตรวจสอบความถูกต้องของไฟล์ `watchlist.csv` ก่อนนำข้อมูลไปใช้งานต่อ
-
-สคริปต์นี้จะตรวจสอบว่าไฟล์มีคอลัมน์ที่จำเป็นครบถ้วนหรือไม่ ได้แก่
-`ticker`, `market`, `name`, `asset_type`, `category`, `risk_level`, `priority`, `reason_to_watch`, `source_to_check`, `note`
-
-นอกจากนี้ สคริปต์จะตรวจสอบข้อมูลทีละแถวว่าแต่ละรายการมีค่า `ticker` และ `market` หรือไม่ เพื่อป้องกันข้อมูลตกหล่นที่อาจทำให้การวิเคราะห์ผิดพลาด
-
-เมื่อการตรวจสอบเสร็จ สคริปต์จะแสดงจำนวนหุ้น/ETF ทั้งหมด และสรุปจำนวนแยกตาม `market` กับ `asset_type` เพื่อให้เห็นภาพรวมของรายการที่กำลังติดตามได้ง่ายขึ้น
-
-ตัวอย่างคำสั่งสำหรับรันในเครื่อง:
+1. เปิด Terminal ในโฟลเดอร์โปรเจกต์นี้
+2. ติดตั้งโปรแกรมที่จำเป็นก่อน:
+   - ติดตั้ง [Node.js LTS](https://nodejs.org/) (แนะนำเวอร์ชัน 20 ขึ้นไป)
+3. ติดตั้งแพ็กเกจ:
 
 ```bash
-python3 scripts/check_watchlist.py
+npm install
 ```
 
-
-## วิธีดึงราคาย้อนหลังหุ้นสหรัฐฯ (US)
-
-สามารถใช้สคริปต์ `scripts/fetch_us_prices.py` เพื่อดึงข้อมูลราคาย้อนหลัง 1 ปีจาก Yahoo Finance สำหรับรายการที่ `market = US` ในไฟล์ `watchlist.csv` แล้วบันทึกเป็นไฟล์แยกรายตัวในโฟลเดอร์ `data/prices/us/` เช่น `AAPL.csv`, `MSFT.csv`, `VOO.csv`
-
-สคริปต์นี้สร้างโฟลเดอร์ `data/prices/us/` ให้อัตโนมัติหากยังไม่มี และจะแสดงข้อความเตือนภาษาไทยเมื่อดึงข้อมูลหุ้นบางตัวไม่สำเร็จ
-
-ตัวอย่างคำสั่งรัน:
+4. รันเว็บไซต์โหมดพัฒนา:
 
 ```bash
-pip install -r requirements.txt
-python3 scripts/fetch_us_prices.py
+npm run dev
 ```
 
-> หมายเหตุ: สคริปต์นี้ใช้เพื่อการเก็บข้อมูลและวิเคราะห์เท่านั้น ไม่มีการเชื่อมต่อระบบซื้อขาย และไม่มีการส่งคำสั่งซื้อขายหุ้น
+5. เปิดเบราว์เซอร์ไปที่:
+
+```text
+http://localhost:3000
+```
+
+## คำสั่งที่ใช้บ่อย
+
+- `npm run dev` เริ่มโปรเจกต์
+- `npm run build` สร้างไฟล์สำหรับ production
+- `npm run start` รันโปรเจกต์แบบ production
+
+## โครงสร้างหลัก
+
+- `app/page.tsx` หน้า Landing Page หลัก
+- `components/sections.tsx` ส่วน Navbar, Hero, About, Products, Experience, Contact, Footer
+- `components/content.ts` ข้อความสองภาษา TH/EN
+- `app/layout.tsx` metadata พื้นฐาน SEO
